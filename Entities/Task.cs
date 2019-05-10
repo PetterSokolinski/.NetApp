@@ -13,7 +13,7 @@ namespace BackendApi.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int TaskId { get; set; }
         [Required, MaxLength(200)]
         public string Title { get; set; }
         public DateTime? ToStart { get; set; }
@@ -21,7 +21,10 @@ namespace BackendApi.Entities
         [DefaultValue(false)]
         public bool Finished { get; set; }
         public int? UserID { get; set; }
+        public int? ProjectID { get; set; }
         [JsonIgnore]
         public virtual User User { get; set; }
+        [JsonIgnore]
+        public virtual Project Project { get; set; }
     }
 }

@@ -23,13 +23,13 @@ namespace BackendApi.Services
         public async Task<IEnumerable<User>> GetAll()
         {
             return await System.Threading.Tasks.Task.Run<IEnumerable<User>>(() =>
-                _context.Users.Select(u => new User() { Id = u.Id, Username = u.Username, Email = u.Email, Password = u.Password, Created = u.Created, Active = u.Active,  Tasks = u.Tasks}));
+                _context.Users.Select(u => new User() { UserId = u.UserId, Username = u.Username, Email = u.Email, Password = u.Password, Created = u.Created, Active = u.Active, ProjectsAndUsers = u.ProjectsAndUsers, Tasks = u.Tasks}));
         }
 
         public async Task<User> GetUser(long id)
         {
             return await System.Threading.Tasks.Task.Run<User>(() =>
-                _context.Users.SingleOrDefault(u => u.Id == id));
+                _context.Users.SingleOrDefault(u => u.UserId == id));
         }
 
         public async Task<User> Register(User user)
@@ -52,7 +52,7 @@ namespace BackendApi.Services
         {
             return await System.Threading.Tasks.Task.Run<bool>(() =>
             {
-                User usr = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+                User usr = _context.Users.FirstOrDefault(u => u.UserId == user.UserId);
                 if (usr != null)
                 {
                     usr.Username = user.Username;
@@ -60,11 +60,14 @@ namespace BackendApi.Services
                     usr.Password = user.Password;
                     usr.Active = user.Active;
                     _context.SaveChanges();
+                
                     return true;
                 }
                 else
                     return false;
             });
         }
+
+        
     }
 }

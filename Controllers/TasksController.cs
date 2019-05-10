@@ -40,7 +40,7 @@ namespace BackendApi.Controllers
             var tsk = await _service.AddTask(task);
             if (tsk != null)
             {
-                return CreatedAtAction("GetTask", new { id = task.Id }, task);
+                return CreatedAtAction("GetTask", new { id = task.TaskId }, task);
             }
             else
                 return Conflict(); // HTTP-Status: 409
@@ -48,7 +48,7 @@ namespace BackendApi.Controllers
 
         //// GET: api/Tasks/5
         [HttpGet("{id}")]
-        public async System.Threading.Tasks.Task<ActionResult<Entities.Task>> GetUser([FromRoute] int id)
+        public async System.Threading.Tasks.Task<ActionResult<Entities.Task>> GetTask([FromRoute] int id)
         {
             var task = await _service.GetTask(id);
             if (task == null)
@@ -61,7 +61,7 @@ namespace BackendApi.Controllers
         [HttpPut("{id}")]
         public async System.Threading.Tasks.Task<IActionResult> PutTask([FromRoute] int id, [FromBody] Entities.Task task)
         {
-            if (task == null || id != task.Id)
+            if (task == null || id != task.TaskId)
                 return BadRequest();
 
             var tsk = await _service.GetTask(id);
@@ -72,6 +72,20 @@ namespace BackendApi.Controllers
                 return NoContent();
             else
                 return NotFound("User does not exist");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTask(long id)
+        {
+            var task = await _service.GetTask(id);
+
+            if (task == null)
+            {
+                return NotFound("User does not exist");
+            }
+            await _service.RemoveTask(task);
+            return NoContent();
+
         }
 
     }

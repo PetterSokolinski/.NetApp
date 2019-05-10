@@ -48,7 +48,7 @@ namespace BackendApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
-            if (user == null || id != user.Id)
+            if (user == null || id != user.UserId)
                 return BadRequest();
 
             var usr = await _service.GetUser(id);
@@ -75,10 +75,12 @@ namespace BackendApi.Controllers
             var u = await _service.Register(user);
             if (u != null)
             {
-                return CreatedAtAction("GetUser", new { id = user.Id }, user);
+                return CreatedAtAction("GetUser", new { id = user.UserId }, user);
             }
             else
                 return Conflict(); // HTTP-Status: 409
         }
+
+        
     }
 }

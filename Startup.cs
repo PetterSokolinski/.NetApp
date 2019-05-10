@@ -34,6 +34,8 @@ namespace BackendApi
             services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration["ConnStrings:UserDB"]));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IUserProjectService, UserProjectService>();
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 

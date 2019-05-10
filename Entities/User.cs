@@ -12,7 +12,7 @@ namespace BackendApi.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int UserId { get; set; }
         [Required, MaxLength(50)]
         public string Username { get; set; }
         [Required, EmailAddress]
@@ -22,5 +22,6 @@ namespace BackendApi.Entities
         public DateTime Created { get; set; }
         public bool Active { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
+        public ICollection<UserProject> ProjectsAndUsers { get; set; }
     }
 }

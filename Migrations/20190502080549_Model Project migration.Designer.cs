@@ -4,24 +4,26 @@ using BackendApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackendApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20190502080549_Model Project migration")]
+    partial class ModelProjectmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("BackendApi.Entities.Project", b =>
                 {
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -33,14 +35,14 @@ namespace BackendApi.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.HasKey("ProjectId");
+                    b.HasKey("Id");
 
                     b.ToTable("Project");
                 });
 
             modelBuilder.Entity("BackendApi.Entities.Task", b =>
                 {
-                    b.Property<int>("TaskId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -58,7 +60,7 @@ namespace BackendApi.Migrations
 
                     b.Property<int?>("UserID");
 
-                    b.HasKey("TaskId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProjectID");
 
@@ -69,7 +71,7 @@ namespace BackendApi.Migrations
 
             modelBuilder.Entity("BackendApi.Entities.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -85,26 +87,17 @@ namespace BackendApi.Migrations
                     b.Property<string>("Password")
                         .IsRequired();
 
+                    b.Property<int?>("ProjectID");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectID");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("BackendApi.Entities.UserProject", b =>
-                {
-                    b.Property<int>("ProjectId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("ProjectId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProject");
                 });
 
             modelBuilder.Entity("BackendApi.Entities.Task", b =>
@@ -118,17 +111,11 @@ namespace BackendApi.Migrations
                         .HasForeignKey("UserID");
                 });
 
-            modelBuilder.Entity("BackendApi.Entities.UserProject", b =>
+            modelBuilder.Entity("BackendApi.Entities.User", b =>
                 {
-                    b.HasOne("BackendApi.Entities.Project", "Project")
-                        .WithMany("ProjectsAndUsers")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("BackendApi.Entities.User", "User")
-                        .WithMany("ProjectsAndUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("BackendApi.Entities.Project")
+                        .WithMany("Workers")
+                        .HasForeignKey("ProjectID");
                 });
 #pragma warning restore 612, 618
         }
