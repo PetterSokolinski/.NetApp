@@ -22,7 +22,7 @@ namespace BackendApi.Services
             {
                 Project prj = _context.Projects.SingleOrDefault(p => p.ProjectId == project.ProjectId);
                 if (prj == null)
-                {                  
+                {
                     _context.Projects.Add(project);
                     _context.SaveChanges();
                     return project;
@@ -35,13 +35,29 @@ namespace BackendApi.Services
         public async Task<IEnumerable<Project>> GetAll()
         {
             return await System.Threading.Tasks.Task.Run<IEnumerable<Project>>(() =>
-                _context.Projects.Select(p => new Project() { ProjectId = p.ProjectId, Title = p.Title, Running = p.Running, Tasks = p.Tasks, ProjectsAndUsers = p.ProjectsAndUsers }));
+                _context.Projects.Select(p => new Project() { ProjectId = p.ProjectId, Title = p.Title, Running = p.Running, UserID = p.UserID, Tasks = p.Tasks }));
         }
 
         public async Task<Project> GetProject(long id)
         {
             return await System.Threading.Tasks.Task.Run<Project>(() =>
-                _context.Projects.SingleOrDefault(p => p.ProjectId == id));
+            {
+                Project project = _context.Projects.SingleOrDefault(p => p.ProjectId == id);
+                if(project == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return new Project() { ProjectId = project.ProjectId, Title = project.Title, Running = project.Running, UserID = project.UserID, Tasks = project.Tasks };
+                }
+            });
+                
+        }
+
+        private Task<Project> NotFound(string v)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> SaveProjectData(Project project)
@@ -54,7 +70,7 @@ namespace BackendApi.Services
                     prj.Title = project.Title;
                     prj.Company = project.Company;
                     prj.Running = project.Running;
-                    prj.ProjectsAndUsers = project.ProjectsAndUsers;
+                    prj.UserID = project.UserID;
                     _context.SaveChanges();
                     return true;
                 }

@@ -19,7 +19,9 @@ namespace BackendApi.Entities
         public string Company { get; set; }
         [DefaultValue(true)]
         public bool Running { get; set; }
-        public virtual ICollection<UserProject> ProjectsAndUsers { get; set; }
+        public int? UserID { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
+        [JsonIgnore]
+        public virtual User User { get; set; }
     }
 }

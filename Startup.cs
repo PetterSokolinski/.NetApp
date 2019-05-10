@@ -35,7 +35,6 @@ namespace BackendApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IProjectService, ProjectService>();
-            services.AddScoped<IUserProjectService, UserProjectService>();
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 

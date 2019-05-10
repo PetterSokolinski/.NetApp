@@ -22,6 +22,6 @@ namespace BackendApi.Entities
         public DateTime Created { get; set; }
         public bool Active { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
-        public ICollection<UserProject> ProjectsAndUsers { get; set; }
+        public ICollection<Project> Projects { get; set; }
     }
 }

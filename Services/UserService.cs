@@ -23,7 +23,7 @@ namespace BackendApi.Services
         public async Task<IEnumerable<User>> GetAll()
         {
             return await System.Threading.Tasks.Task.Run<IEnumerable<User>>(() =>
-                _context.Users.Select(u => new User() { UserId = u.UserId, Username = u.Username, Email = u.Email, Password = u.Password, Created = u.Created, Active = u.Active, ProjectsAndUsers = u.ProjectsAndUsers, Tasks = u.Tasks}));
+                _context.Users.Select(u => new User() { UserId = u.UserId, Username = u.Username, Email = u.Email, Password = u.Password, Created = u.Created, Active = u.Active, Tasks = u.Tasks, Projects = u.Projects}));
         }
 
         public async Task<User> GetUser(long id)

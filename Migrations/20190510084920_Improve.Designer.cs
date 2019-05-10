@@ -4,14 +4,16 @@ using BackendApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackendApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20190510084920_Improve")]
+    partial class Improve
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,11 +35,11 @@ namespace BackendApi.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<int?>("UserID");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("ProjectId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Project");
                 });
@@ -102,7 +104,7 @@ namespace BackendApi.Migrations
                 {
                     b.HasOne("BackendApi.Entities.User", "User")
                         .WithMany("Projects")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("BackendApi.Entities.Task", b =>

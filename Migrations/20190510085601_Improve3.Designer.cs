@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20190510070134_ManyToMany")]
-    partial class ManyToMany
+    [Migration("20190510085601_Improve3")]
+    partial class Improve3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,11 @@ namespace BackendApi.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
+                    b.Property<int?>("UserID");
+
                     b.HasKey("ProjectId");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("Project");
                 });
@@ -96,17 +100,11 @@ namespace BackendApi.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("BackendApi.Entities.UserProject", b =>
+            modelBuilder.Entity("BackendApi.Entities.Project", b =>
                 {
-                    b.Property<int>("ProjectId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("ProjectId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProject");
+                    b.HasOne("BackendApi.Entities.User", "User")
+                        .WithMany("Projects")
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("BackendApi.Entities.Task", b =>
@@ -118,19 +116,6 @@ namespace BackendApi.Migrations
                     b.HasOne("BackendApi.Entities.User", "User")
                         .WithMany("Tasks")
                         .HasForeignKey("UserID");
-                });
-
-            modelBuilder.Entity("BackendApi.Entities.UserProject", b =>
-                {
-                    b.HasOne("BackendApi.Entities.Project", "Project")
-                        .WithMany("ProjectsAndUsers")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("BackendApi.Entities.User", "User")
-                        .WithMany("ProjectsAndUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
