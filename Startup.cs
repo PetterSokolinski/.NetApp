@@ -15,6 +15,7 @@ using BackendApi.Entities;
 using BackendApi.Services;
 using Microsoft.AspNetCore.Authentication;
 using BackendApi.Helpers;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace BackendApi
 {
@@ -26,10 +27,21 @@ namespace BackendApi
         }
 
         public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllHeaders",
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin()
+                                 .AllowAnyHeader()
+                                 .AllowAnyMethod()
+                                 .AllowCredentials();
+                      });
+            });
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<UserContext>(options => options.UseSqlServer(Configuration["ConnStrings:UserDB"]));
             services.AddScoped<IUserService, UserService>();
@@ -37,6 +49,11 @@ namespace BackendApi
             services.AddScoped<IProjectService, ProjectService>();
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Sensor API", Version = "v1" });
+                c.CustomSchemaIds(i => i.FullName);
+            });
 
         }
 
@@ -52,11 +69,17 @@ namespace BackendApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseCors("AllowAllHeaders");
             app.UseAuthentication();
-
             app.UseHttpsRedirection();
+            app.UseSwagger(); // enable middleware to serve swagger‐ui (HTML, JS, etc.),
+            app.UseSwaggerUI(c => // specifying the Swagger JSON endpoint.
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sensor API V1");
+            });
             app.UseMvc();
+
+
         }
     }
 }

@@ -27,7 +27,18 @@ namespace BackendApi.Entities
                 .WithMany(t => t.Tasks)
                 .HasForeignKey(u => u.UserID)
                 .IsRequired(false);
-               
+
+            modelBuilder.Entity<ProjectAndUser>()
+            .HasKey(up => new { up.ProjectId, up.UserId });
+            modelBuilder.Entity<ProjectAndUser>()
+                .HasOne(up => up.Project)
+                .WithMany(p => p.Users)
+                .HasForeignKey(up => up.ProjectId);
+            modelBuilder.Entity<ProjectAndUser>()
+                .HasOne(up => up.User)
+                .WithMany(u => u.Projects)
+                .HasForeignKey(up => up.UserId);
+
 
             // this will singularize all table names
             foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())

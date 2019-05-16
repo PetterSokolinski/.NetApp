@@ -6,24 +6,41 @@ using Microsoft.AspNetCore.Mvc;
 using BackendApi.Entities;
 using BackendApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BackendApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _service;
-        public UsersController(IUserService service)
+        private readonly IProjectService _projectService;
+        public UsersController(IUserService service, IProjectService projectService)
         {
             _service = service;
+            _projectService = projectService;
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody]User user)
+        {
+            var usr = await _service.Authenticate(user.Email, user.Password);
+
+            if (usr == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(usr);
         }
 
         // GET: api/Users
         [HttpGet]
+        [EnableCors("AllowAllHeaders")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             var users = await _service.GetAll();
@@ -32,6 +49,7 @@ namespace BackendApi.Controllers
 
         //// GET: api/Users/5
         [HttpGet("{id}")]
+        [EnableCors("AllowAllHeaders")]
         public async Task<ActionResult<User>> GetUser([FromRoute] int id)
         {
             var user = await _service.GetUser(id);
@@ -46,6 +64,7 @@ namespace BackendApi.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
+        [EnableCors("AllowAllHeaders")]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
             if (user == null || id != user.UserId)
@@ -63,12 +82,34 @@ namespace BackendApi.Controllers
             else
                 return NotFound("User does not exist");
         }
+
+
+        //[Route("addproject")]
+        [HttpPost("addproject/{id:int}/{projectId:int}")]
+        [AllowAnonymous]
+        [EnableCors("AllowAllHeaders")]
+        public async Task<IActionResult> AddProjectToTheUser(int id, int projectId)
+        {
+            User user = await _service.GetUser(id);
+            Project project = await _projectService.GetProject(projectId);
+            user.Projects.Add(new ProjectAndUser { Project = project });
+            if (await _service.SaveUserData(user))
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("User does not exist");
+            }
+        }
+
         [AllowAnonymous]
         // POST: api/Users
         [HttpPost]
+        [EnableCors("AllowAllHeaders")]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            if (user == null)
+            if (user == null)   
             {
                 BadRequest();
             }
@@ -81,6 +122,6 @@ namespace BackendApi.Controllers
                 return Conflict(); // HTTP-Status: 409
         }
 
-        
+
     }
 }

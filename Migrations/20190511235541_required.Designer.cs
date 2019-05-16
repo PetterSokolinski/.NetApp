@@ -4,14 +4,16 @@ using BackendApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackendApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20190511235541_required")]
+    partial class required
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,8 +76,6 @@ namespace BackendApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
-
                     b.Property<bool>("Finished");
 
                     b.Property<int?>("ProjectID");
@@ -84,9 +84,9 @@ namespace BackendApi.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<string>("ToFinish");
+                    b.Property<DateTime?>("ToFinish");
 
-                    b.Property<string>("ToStart");
+                    b.Property<DateTime?>("ToStart");
 
                     b.Property<int?>("UserID");
 
@@ -111,7 +111,8 @@ namespace BackendApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.Property<string>("Password");
 

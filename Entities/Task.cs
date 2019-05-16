@@ -16,10 +16,12 @@ namespace BackendApi.Entities
         public int TaskId { get; set; }
         [Required, MaxLength(200)]
         public string Title { get; set; }
-        public DateTime? ToStart { get; set; }
-        public DateTime? ToFinish { get; set; }
+        public string ToStart { get; set; }
+        public string ToFinish { get; set; }
         [DefaultValue(false)]
         public bool Finished { get; set; }
+        public ICollection<Tag> Tags { get; set; }
+        public string Description { get; set; }
         public int? UserID { get; set; }
         public int? ProjectID { get; set; }
         [JsonIgnore]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendApi.Entities;
-
+using Microsoft.EntityFrameworkCore;
 namespace BackendApi.Services
 {
     public class ProjectService : IProjectService
@@ -16,7 +16,7 @@ namespace BackendApi.Services
         }
 
 
-        public async Task<Project> AddProject(Project project)
+        public async System.Threading.Tasks.Task<Project> AddProject(Project project)
         {
             return await System.Threading.Tasks.Task.Run<Project>(() =>
             {
@@ -32,35 +32,20 @@ namespace BackendApi.Services
             });
         }
 
-        public async Task<IEnumerable<Project>> GetAll()
+        public async System.Threading.Tasks.Task<IEnumerable<Project>> GetAll()
         {
             return await System.Threading.Tasks.Task.Run<IEnumerable<Project>>(() =>
-                _context.Projects.Select(p => new Project() { ProjectId = p.ProjectId, Title = p.Title, Running = p.Running, UserID = p.UserID, Tasks = p.Tasks }));
+                _context.Projects.Select(p => new Project() { ProjectId = p.ProjectId, Title = p.Title, Company = p.Company, Running = p.Running, Tasks = p.Tasks, Users = p.Users }));
         }
 
-        public async Task<Project> GetProject(long id)
+        public async System.Threading.Tasks.Task<Project> GetProject(long id)
         {
             return await System.Threading.Tasks.Task.Run<Project>(() =>
-            {
-                Project project = _context.Projects.SingleOrDefault(p => p.ProjectId == id);
-                if(project == null)
-                {
-                    return null;
-                }
-                else
-                {
-                    return new Project() { ProjectId = project.ProjectId, Title = project.Title, Running = project.Running, UserID = project.UserID, Tasks = project.Tasks };
-                }
-            });
-                
+            _context.Projects.Where(p => p.ProjectId == id).Include(x => x.Users).Include(x => x.Tasks).FirstOrDefault());
+
         }
 
-        private Task<Project> NotFound(string v)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> SaveProjectData(Project project)
+        public async System.Threading.Tasks.Task<bool> SaveProjectData(Project project)
         {
             return await System.Threading.Tasks.Task.Run<bool>(() =>
             {
@@ -70,7 +55,7 @@ namespace BackendApi.Services
                     prj.Title = project.Title;
                     prj.Company = project.Company;
                     prj.Running = project.Running;
-                    prj.UserID = project.UserID;
+                    prj.Users = project.Users;
                     _context.SaveChanges();
                     return true;
                 }

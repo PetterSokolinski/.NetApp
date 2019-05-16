@@ -13,15 +13,14 @@ namespace BackendApi.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
-        [Required, MaxLength(50)]
+        [MaxLength(50)]
         public string Username { get; set; }
-        [Required, EmailAddress]
+        [EmailAddress]
         public string Email { get; set; }
-        [Required]
         public string Password { get; set; }
         public DateTime Created { get; set; }
-        public bool Active { get; set; }
+        public bool Active { get; set; } //wyjebac
         public virtual ICollection<Task> Tasks { get; set; }
-        public ICollection<Project> Projects { get; set; }
+        public ICollection<ProjectAndUser> Projects { get; set; }
     }
 }

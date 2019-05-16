@@ -4,14 +4,16 @@ using BackendApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackendApi.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20190511201456_withoutUsername")]
+    partial class withoutUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,30 +53,11 @@ namespace BackendApi.Migrations
                     b.ToTable("ProjectAndUser");
                 });
 
-            modelBuilder.Entity("BackendApi.Entities.Tag", b =>
-                {
-                    b.Property<int>("TagId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TagName");
-
-                    b.Property<int?>("TaskId");
-
-                    b.HasKey("TagId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("Tag");
-                });
-
             modelBuilder.Entity("BackendApi.Entities.Task", b =>
                 {
                     b.Property<int>("TaskId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description");
 
                     b.Property<bool>("Finished");
 
@@ -84,9 +67,9 @@ namespace BackendApi.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<string>("ToFinish");
+                    b.Property<DateTime?>("ToFinish");
 
-                    b.Property<string>("ToStart");
+                    b.Property<DateTime?>("ToStart");
 
                     b.Property<int?>("UserID");
 
@@ -111,9 +94,11 @@ namespace BackendApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.Property<string>("Username")
                         .HasMaxLength(50);
@@ -134,13 +119,6 @@ namespace BackendApi.Migrations
                         .WithMany("Projects")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("BackendApi.Entities.Tag", b =>
-                {
-                    b.HasOne("BackendApi.Entities.Task")
-                        .WithMany("Tags")
-                        .HasForeignKey("TaskId");
                 });
 
             modelBuilder.Entity("BackendApi.Entities.Task", b =>
