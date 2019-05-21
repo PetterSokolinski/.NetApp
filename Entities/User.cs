@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace BackendApi.Entities
 {
@@ -19,7 +20,9 @@ namespace BackendApi.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime Created { get; set; }
-        public bool Active { get; set; } //wyjebac
+        [DefaultValue("User")]
+        public string Role { get; set; }
+        public string Token { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
         public ICollection<ProjectAndUser> Projects { get; set; }
     }

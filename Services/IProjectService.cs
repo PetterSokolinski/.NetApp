@@ -12,5 +12,6 @@ namespace BackendApi.Services
         Task<Project> GetProject(long id);
         Task<Project> AddProject(Project project);
         Task<bool> SaveProjectData(Project project);
+        Task<bool> RemoveProject(Project project);
     }
 }

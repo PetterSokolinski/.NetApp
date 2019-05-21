@@ -29,7 +29,8 @@ namespace BackendApi.Services
             {
                 Task tsk = _context.Tasks.SingleOrDefault(t => t.TaskId == task.TaskId);
                 if (tsk == null)
-                {                  
+                {
+                    //task.Finished = false;
                     _context.Tasks.Add(task);
                     _context.SaveChanges();
                     return task;

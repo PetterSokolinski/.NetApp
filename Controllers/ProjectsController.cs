@@ -44,10 +44,10 @@ namespace BackendApi.Controllers
                 return CreatedAtAction("GetProject", new { id = project.ProjectId }, project);
             }
             else
-                return Conflict(); // HTTP-Status: 409
+                return Conflict();
         }
 
-        //// GET: api/Projects/5
+        // GET: api/Projects/5
         [HttpGet("{id}")]
         public async System.Threading.Tasks.Task<ActionResult<Project>> GetProject([FromRoute] int id)
         {
@@ -73,6 +73,20 @@ namespace BackendApi.Controllers
                 return NoContent();
             else
                 return NotFound("User does not exist");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProject(long id)
+        {
+            var project = await _service.GetProject(id);
+
+            if (project == null)
+            {
+                return NotFound("User does not exist");
+            }
+            await _service.RemoveProject(project);
+            return NoContent();
+
         }
 
 

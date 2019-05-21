@@ -52,10 +52,10 @@ namespace BackendApi.Services
                 Project prj = _context.Projects.FirstOrDefault(p => p.ProjectId == project.ProjectId);
                 if (prj != null)
                 {
-                    prj.Title = project.Title;
-                    prj.Company = project.Company;
+                    prj.Title = project.Title ?? prj.Title;
+                    prj.Company = project.Company ?? prj.Company;
                     prj.Running = project.Running;
-                    prj.Users = project.Users;
+                    prj.Users = project.Users ?? prj.Users;
                     _context.SaveChanges();
                     return true;
                 }
@@ -63,5 +63,16 @@ namespace BackendApi.Services
                     return false;
             });
         }
+        
+        public async System.Threading.Tasks.Task<bool> RemoveProject(Project project)
+        {
+            return await System.Threading.Tasks.Task.Run<bool>(() =>
+            {
+                _context.Remove(project);
+                _context.SaveChanges();
+                return true;
+            });
+        }
+        
     }
 }

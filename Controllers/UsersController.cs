@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace BackendApi.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -34,11 +34,11 @@ namespace BackendApi.Controllers
 
             if (usr == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
-
             return Ok(usr);
         }
 
         // GET: api/Users
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         [EnableCors("AllowAllHeaders")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
@@ -47,7 +47,7 @@ namespace BackendApi.Controllers
             return Ok(users);
         }
 
-        //// GET: api/Users/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
         [EnableCors("AllowAllHeaders")]
         public async Task<ActionResult<User>> GetUser([FromRoute] int id)
@@ -56,8 +56,11 @@ namespace BackendApi.Controllers
             if (user == null)
                 return NotFound();
 
-            if (user.Email != User.Identity.Name) // use the created identity 
-                return Forbid();
+           var currentUserId = int.Parse(User.Identity.Name);
+           if (id != currentUserId && !User.IsInRole(Role.Admin))
+           {
+               return Forbid();
+           }
 
             return Ok(user);
         }
@@ -74,8 +77,11 @@ namespace BackendApi.Controllers
             if (usr == null)
                 return NotFound("User does not exist");
 
-            if (usr.Email != User.Identity.Name)
+            var currentUserId = int.Parse(User.Identity.Name);
+            if (id != currentUserId && !User.IsInRole(Role.Admin))
+            {
                 return Forbid();
+            }
 
             if (await _service.SaveUserData(user))
                 return NoContent();
@@ -86,7 +92,6 @@ namespace BackendApi.Controllers
 
         //[Route("addproject")]
         [HttpPost("addproject/{id:int}/{projectId:int}")]
-        [AllowAnonymous]
         [EnableCors("AllowAllHeaders")]
         public async Task<IActionResult> AddProjectToTheUser(int id, int projectId)
         {

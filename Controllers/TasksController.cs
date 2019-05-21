@@ -43,10 +43,10 @@ namespace BackendApi.Controllers
                 return CreatedAtAction("GetTask", new { id = task.TaskId }, task);
             }
             else
-                return Conflict(); // HTTP-Status: 409
+                return Conflict();
         }
 
-        //// GET: api/Tasks/5
+        // GET: api/Tasks/5
         [HttpGet("{id}")]
         public async System.Threading.Tasks.Task<ActionResult<Entities.Task>> GetTask([FromRoute] int id)
         {
