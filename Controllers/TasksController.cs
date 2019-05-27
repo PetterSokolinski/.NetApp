@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendApi.Entities;
 using BackendApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace BackendApi.Controllers
         }
 
         // GET: api/Tasks
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult<IEnumerable<Task>>> GetTasks()
         {
