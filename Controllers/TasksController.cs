@@ -25,7 +25,7 @@ namespace BackendApi.Controllers
         // GET: api/Tasks
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult<IEnumerable<Task>>> GetTasks()
+        public async System.Threading.Tasks.Task<ActionResult<IEnumerable<Entities.Task>>> GetTasks()
         {
             var tasks = await _service.GetAll();
             return Ok(tasks);
@@ -37,7 +37,7 @@ namespace BackendApi.Controllers
         {
             if (task == null)
             {
-                BadRequest();
+                return BadRequest();
             }
             var tsk = await _service.AddTask(task);
             if (tsk != null)
@@ -68,12 +68,12 @@ namespace BackendApi.Controllers
 
             var tsk = await _service.GetTask(id);
             if (tsk == null)
-                return NotFound("User does not exist");
+                return NotFound("Task does not exist");
 
             if (await _service.SaveTaskData(task))
                 return NoContent();
             else
-                return NotFound("User does not exist");
+                return NotFound("Task does not exist");
         }
 
         [HttpDelete("{id}")]
@@ -83,7 +83,7 @@ namespace BackendApi.Controllers
 
             if (task == null)
             {
-                return NotFound("User does not exist");
+                return NotFound("Task does not exist");
             }
             await _service.RemoveTask(task);
             return NoContent();

@@ -116,7 +116,7 @@ namespace BackendApi.Controllers
         {
             if (user == null)   
             {
-                BadRequest();
+                return BadRequest();
             }
             var u = await _service.Register(user);
             if (u != null)

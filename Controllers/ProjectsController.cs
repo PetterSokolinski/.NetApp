@@ -36,7 +36,7 @@ namespace BackendApi.Controllers
         {
             if (project == null)
             {
-                BadRequest();
+                return BadRequest();
             }
             var prj = await _service.AddProject(project);
             if (prj != null)
@@ -51,28 +51,28 @@ namespace BackendApi.Controllers
         [HttpGet("{id}")]
         public async System.Threading.Tasks.Task<ActionResult<Project>> GetProject([FromRoute] int id)
         {
-            var task = await _service.GetProject(id);
-            if (task == null)
+            var project = await _service.GetProject(id);
+            if (project == null)
                 return NotFound();
 
-            return Ok(task);
+            return Ok(project);
         }
 
         // PUT: api/Projects/5
         [HttpPut("{id}")]
-        public async System.Threading.Tasks.Task<IActionResult> PutTask([FromRoute] int id, [FromBody] Project project)
+        public async System.Threading.Tasks.Task<IActionResult> PutProject([FromRoute] int id, [FromBody] Project project)
         {
             if (project == null || id != project.ProjectId)
                 return BadRequest();
 
             var prj = await _service.GetProject(id);
             if (prj == null)
-                return NotFound("User does not exist");
+                return NotFound("Project does not exist");
 
             if (await _service.SaveProjectData(project))
                 return NoContent();
             else
-                return NotFound("User does not exist");
+                return NotFound("Project does not exist");
         }
 
         [HttpDelete("{id}")]
@@ -82,7 +82,7 @@ namespace BackendApi.Controllers
 
             if (project == null)
             {
-                return NotFound("User does not exist");
+                return NotFound("Project does not exist");
             }
             await _service.RemoveProject(project);
             return NoContent();
